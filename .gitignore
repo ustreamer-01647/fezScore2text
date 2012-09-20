@@ -1,3 +1,9 @@
+# VS Express for Desktop
+*.sdf
+*.suo
+\Debug
+\Release
+
 # Compiled Object files
 *.slo
 *.lo
