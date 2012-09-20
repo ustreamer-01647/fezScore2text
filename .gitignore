@@ -4,6 +4,7 @@
 # VS Express for Desktop
 *.sdf
 *.suo
+*.opensdf
 \Debug
 \Release
 
