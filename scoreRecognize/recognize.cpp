@@ -90,6 +90,14 @@ struct Score
 	}
 };
 
+int recognizeNumeric ( const cv::Mat image, const size_t n )
+{
+	// 0
+	// 12
+	// 345
+	return 0;
+}
+
 class CharactersInfo
 {
 private:
@@ -171,17 +179,31 @@ public:
 		return image( cv::Rect( offsets[n], 0, widths[n], image.rows ) );
 	}
 
+	// 数字認識
+	int getNumeric ( size_t n )
+	{
+		// 文字がないときは 0
+		if ( 0 == size() )
+			return 0;
+
+		return recognizeNumeric ( characterImage ( n ), n );
+	}
+
 };
 
 // 画像から数値を読み出す
-int recognizeNumeric ( const cv::Mat image, const int offset, const int width )
+int recognizeInteger ( const cv::Mat image, const int offset, const int width )
 {
 	// 文字列情報
-	std::vector<struct CharactersInfo> charactersInfo( image );;
+	CharactersInfo charactersInfo( image );
 
 	// 数値認識
-	// 連結
-
+	std::stringstream integer;
+	for ( size_t n = 0; n < charactersInfo.size(); n++ )
+	{
+		integer << charactersInfo.getNumeric ( n );
+	}
+	
 	return 0;
 }
 
@@ -193,7 +215,7 @@ void recognize ( const cv::vector<cv::Mat> images, std::vector<struct Score> &sc
 		struct Score score;
 		
 		// 順位
-		recognizeNumeric( images[i], Score::RankOffset, Score::RankWidth );
+		recognizeInteger( images[i], Score::RankOffset, Score::RankWidth );
 		// キャラクタ名
 		//recognizeText ( images[i], Score::NameOffset, Score::NameWidth );
 		// 所属国
@@ -201,15 +223,15 @@ void recognize ( const cv::vector<cv::Mat> images, std::vector<struct Score> &sc
 		// クラス
 		//recognizeText ( images[i], Score::JobOffset, Score::JobWidth );
 		// キル数
-		recognizeNumeric ( images[i], Score::KillOffset, Score::KillWidth );
+		recognizeInteger ( images[i], Score::KillOffset, Score::KillWidth );
 		// デッド数
-		recognizeNumeric ( images[i], Score::DeadOffset, Score::DeadWidth );
+		recognizeInteger ( images[i], Score::DeadOffset, Score::DeadWidth );
 		// 貢献度
-		recognizeNumeric ( images[i], Score::ContributionOffset, Score::ContributionWidth );
+		recognizeInteger ( images[i], Score::ContributionOffset, Score::ContributionWidth );
 		// PC与ダメージ
-		recognizeNumeric ( images[i], Score::PcDamageOffset, Score::PcDamageWidth );
+		recognizeInteger ( images[i], Score::PcDamageOffset, Score::PcDamageWidth );
 		// 建物与ダメージ
-		recognizeNumeric ( images[i], Score::ObjectDamageOffset, images[i].cols - Score::ObjectDamageOffset );
+		recognizeInteger ( images[i], Score::ObjectDamageOffset, images[i].cols - Score::ObjectDamageOffset );
 
 		scores.push_back ( score );
 	}
