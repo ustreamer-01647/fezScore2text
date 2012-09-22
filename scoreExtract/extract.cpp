@@ -1,11 +1,11 @@
-#include "extract.h"
-
 #include <sstream>
 
 #include<opencv2/core/core.hpp>
 #include<opencv2/highgui/highgui.hpp>
 #include<opencv2/imgproc/imgproc.hpp>
 #include<opencv2/features2d/features2d.hpp>
+
+#include "extract.h"
 
 #ifdef _DEBUG
     //Debugモードの場合
@@ -70,6 +70,36 @@ void extractScoreRows( const cv::Mat scoreTable, cv::vector<cv::Mat> &scoreRows 
 	showrite( "35scoreRow.png", scoreRow );
 }
 
+// 孤立輝点除去
+// 周囲に輝点がない場合，その輝点を消す
+cv::Mat removeNoise ( const cv::Mat image )
+{
+	// 一回り大きい行列
+	cv::Mat workImage = cv::Mat::zeros( image.rows+2, image.cols+2, image.type() );
+	// 作業用行列にimageを入力する
+	image.copyTo( workImage( cv::Rect( 1, 1, image.cols, image.rows ) ));
+	showrite( "21workImage.png", workImage );
+
+	// 走査
+	for ( int row = 0; row < image.rows; row++ )
+	{
+		for ( int col = 0; col < image.cols; col++ )
+		{
+			// 注目画素が暗点ならば，何もしない
+			if ( 0 == image.at<unsigned char>( row, col ) )
+				continue;
+
+			// 範囲 3x3 の輝点が1ならば，中心画素を暗点にする
+			int nonzero = cv::countNonZero( workImage( cv::Rect ( col, row, 3, 3 ) ));
+			if ( 1 == nonzero )
+				workImage.at<unsigned char>( row+1, col+1 ) = 0;
+		}
+	}
+	showrite( "22workImage.png", workImage );
+
+	return workImage( cv::Rect( 1, 1, image.cols, image.rows ) );
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -101,12 +131,16 @@ int main(int argc, char *argv[])
 	cv::threshold( gray, bin, 150.0, 255.0, CV_THRESH_BINARY );
 	showrite( "20binary.png", bin );
 
+	// 孤立輝点除去
+	cv::Mat nonNoise;
+	nonNoise = removeNoise( bin );
+	showrite( "25nonNoise.png", nonNoise );
+
 	// 行抽出
 	cv::vector<cv::Mat> scoreRows;
-	extractScoreRows( bin, scoreRows );
+	extractScoreRows( nonNoise, scoreRows );
 
 	cv::waitKey();
 
 	return 0;
 }
-
