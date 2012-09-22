@@ -92,9 +92,7 @@ struct Score
 
 int recognizeNumeric ( const cv::Mat image, const size_t n )
 {
-	// 0
-	// 12
-	// 345
+
 	return 0;
 }
 
@@ -104,9 +102,7 @@ private:
 	// 文字幅最低要件
 	static const int LowestWidth = 4;
 	// 位置
-	std::vector<int> offsets;
-	// 幅
-	std::vector<int> widths;
+	cv::vector<cv::Rect> positions;
 	// 画像
 	cv::Mat image;
 
@@ -119,17 +115,21 @@ public:
 		// 文字存在検索
 		// 輝点列検索フラグ．falseなら暗点列を探す
 		bool flag = true;
+		// 始点
+		int left;
+		// 終点
+		int right;
 		for ( int col = 0; col < image.cols; col++ )
 		{
 			// 列の輝点数を調べる
-			int nonzero = cv::countNonZero( image.col(col) );
+			int nonzero = cv::countNonZero( image( cv::Rect( col, 0, 1, image.rows) ));
 			if ( flag )
 			{
 				// 輝点列探索中
 				if ( 0 < nonzero )
 				{
 					// 輝点が1個以上あったとき
-					offsets.push_back(col);
+					left = col;
 					// フラグ切り替え
 					flag = false;
 				}
@@ -141,18 +141,32 @@ public:
 				{
 					// 暗点列だったなら
 					// offsetsの最後の値を参照し，幅を求める
-					int width = col - offsets.back();
+					right = col;
 					// LowestWidthを満足するか
-					if ( CharactersInfo::LowestWidth <= width )
+					if ( CharactersInfo::LowestWidth <= right - left )
 					{
 						// 文字と認める
-						widths.push_back( width );
-					}
-					else
-					{
-						// 文字とは認めない
-						// 直前のoffsetsを除去する
-						offsets.pop_back();
+						cv::Mat character = image ( cv::Rect ( left, 0, right - left, image.rows ));
+						// 上端輝点行を探す
+						int top;
+						for ( int row = 0; row < character.rows; row++ )
+						{
+							if ( 0 < cv::countNonZero( character.row(row) ) )
+							{
+								top = row;
+							}
+						}
+						// 下端輝点行を探す
+						int bottom;
+						for ( int row = character.rows-1; row > top; row-- )
+						{
+							if ( 0 < cv::countNonZero( character.row(row) ) )
+							{
+								bottom = row+1;
+							}
+						}
+						// 文字領域確定
+						positions.push_back ( cv::Rect( left, top, right-left, bottom-top ) );
 					}
 					// フラグ切り替え
 					flag = true;
@@ -164,7 +178,7 @@ public:
 	// 文字数
 	size_t size()
 	{
-		return offsets.size();
+		return positions.size();
 	}
 
 	// 文字画像
@@ -176,7 +190,7 @@ public:
 			return image;
 		}
 		
-		return image( cv::Rect( offsets[n], 0, widths[n], image.rows ) );
+		return image( positions[n] );
 	}
 
 	// 数字認識
@@ -185,6 +199,12 @@ public:
 		// 文字がないときは 0
 		if ( 0 == size() )
 			return 0;
+
+		static int a = 0;
+		std::stringstream ss;
+		ss << a << ".png";
+		a++;
+		showrite( ss.str(), image( positions[n] ));
 
 		return recognizeNumeric ( characterImage ( n ), n );
 	}
