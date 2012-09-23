@@ -214,7 +214,7 @@ public:
 };
 
 // 画像から数値を読み出す
-int recognizeInteger ( const cv::Mat image, const int offset, const int width )
+int recognizeInteger ( const cv::Mat image )
 {
 	// 文字列情報
 	CharactersInfo charactersInfo( image );
@@ -237,7 +237,7 @@ void recognize ( const cv::vector<cv::Mat> images, std::vector<struct Score> &sc
 		struct Score score;
 		
 		// 順位
-		recognizeInteger( images[i], Score::RankOffset, Score::RankWidth );
+		recognizeInteger( images[i]( cv::Rect ( Score::RankOffset, 0, Score::RankWidth, images[i].rows )));
 		// キャラクタ名
 		//recognizeText ( images[i], Score::NameOffset, Score::NameWidth );
 		// 所属国
@@ -245,15 +245,15 @@ void recognize ( const cv::vector<cv::Mat> images, std::vector<struct Score> &sc
 		// クラス
 		//recognizeText ( images[i], Score::JobOffset, Score::JobWidth );
 		// キル数
-		recognizeInteger ( images[i], Score::KillOffset, Score::KillWidth );
+		recognizeInteger ( images[i]( cv::Rect( Score::KillOffset, 0, Score::KillWidth, images[i].rows )));
 		// デッド数
-		recognizeInteger ( images[i], Score::DeadOffset, Score::DeadWidth );
+		recognizeInteger ( images[i]( cv::Rect( Score::DeadOffset, 0, Score::DeadWidth, images[i].rows )));
 		// 貢献度
-		recognizeInteger ( images[i], Score::ContributionOffset, Score::ContributionWidth );
+		recognizeInteger ( images[i]( cv::Rect( Score::ContributionOffset, 0, Score::ContributionWidth, images[i].rows )));
 		// PC与ダメージ
-		recognizeInteger ( images[i], Score::PcDamageOffset, Score::PcDamageWidth );
+		recognizeInteger ( images[i]( cv::Rect( Score::PcDamageOffset, 0, Score::PcDamageWidth, images[i].rows )));
 		// 建物与ダメージ
-		recognizeInteger ( images[i], Score::ObjectDamageOffset, images[i].cols - Score::ObjectDamageOffset );
+		recognizeInteger ( images[i].colRange( Score::ObjectDamageOffset, images[i].cols));
 
 		scores.push_back ( score );
 	}
