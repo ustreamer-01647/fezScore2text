@@ -122,7 +122,7 @@ public:
 		for ( int col = 0; col < image.cols; col++ )
 		{
 			// —ñ‚Ì‹P“_”‚ð’²‚×‚é
-			int nonzero = cv::countNonZero( image( cv::Rect( col, 0, 1, image.rows) ));
+			int nonzero = cv::countNonZero( image.col(col) );
 			if ( flag )
 			{
 				// ‹P“_—ñ’Tõ’†
@@ -146,23 +146,25 @@ public:
 					if ( CharactersInfo::LowestWidth <= right - left )
 					{
 						// •¶Žš‚Æ”F‚ß‚é
-						cv::Mat character = image ( cv::Rect ( left, 0, right - left, image.rows ));
+						cv::Mat character = image.colRange( left, right );
 						// ã’[‹P“_s‚ð’T‚·
-						int top;
-						for ( int row = 0; row < character.rows; row++ )
+						int top = 0;
+						for ( int row = top; row < character.rows; row++ )
 						{
 							if ( 0 < cv::countNonZero( character.row(row) ) )
 							{
 								top = row;
+								break;
 							}
 						}
 						// ‰º’[‹P“_s‚ð’T‚·
-						int bottom;
-						for ( int row = character.rows-1; row > top; row-- )
+						int bottom = character.rows-1;
+						for ( int row = bottom; row > top; row-- )
 						{
 							if ( 0 < cv::countNonZero( character.row(row) ) )
 							{
 								bottom = row+1;
+								break;
 							}
 						}
 						// •¶Žš—ÌˆæŠm’è
@@ -202,7 +204,7 @@ public:
 
 		static int a = 0;
 		std::stringstream ss;
-		ss << a << ".png";
+		ss << "char" << a << ".png";
 		a++;
 		showrite( ss.str(), image( positions[n] ));
 
@@ -269,7 +271,7 @@ int main(int argc, char *argv[])
 	cv::vector<cv::Mat> testImages;
 	for ( size_t i = 0; i <testFiles.size(); i++ )
 	{
-		cv::Mat image = cv::imread( testFiles[i] );
+		cv::Mat image = cv::imread( testFiles[i], 0 );
 		testImages.push_back  ( image );
 	}
 
