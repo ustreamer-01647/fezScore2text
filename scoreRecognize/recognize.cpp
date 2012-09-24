@@ -264,9 +264,9 @@ int main(int argc, char *argv[])
 {
 	// テスト画像選択
 	std::vector<std::string> testFiles;
-	testFiles.push_back( "1.png" );
-	testFiles.push_back( "5.png" );
-	testFiles.push_back( "player.png" );
+	testFiles.push_back( "1.png" ); // 14
+	testFiles.push_back( "5.png" ); // 14
+	testFiles.push_back( "player.png" ); // 14
 	// 画像読み込み
 	cv::vector<cv::Mat> testImages;
 	for ( size_t i = 0; i <testFiles.size(); i++ )
@@ -277,10 +277,8 @@ int main(int argc, char *argv[])
 
 	// スコア認識
 	std::vector<struct Score> scores;
-	for ( size_t i = 0; i < testImages.size(); i++ )
-	{
-		recognize( testImages, scores );
-	}
+	recognize( testImages, scores );
+
 
 	return 0;
 }
