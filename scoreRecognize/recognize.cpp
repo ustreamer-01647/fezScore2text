@@ -93,40 +93,31 @@ struct Score
 // 数字認識
 int recognizeNumeric ( const cv::Mat image )
 {
-	/*
-	1 右端2列がすべて輝点
-	2 下端2段がすべて輝点
-	7 上端2段がすべて輝点
-	4 右端の左2列がすべて輝点
-	輪郭抽出
-	8 輪郭が3個
-	3, 5 輪郭が1個
-		3 右上隅が暗点
-		5 右上隅が輝点
-	0 6 9 輪郭が2個
-		6 第2輪郭が上3分の1にない
-		0 中央列が輝点，暗点，輝点
-		9 上記以外
-	*/
+	int nonzero = 0;
 
-	if ( image.rows * 2 == cv::countNonZero( image.colRange( image.cols-2, image.cols )) )
+	nonzero = cv::countNonZero( image.colRange( image.cols-2, image.cols ));
+	if ( image.rows * 2 == nonzero )
 	{
 		// 1 右端2列がすべて輝点
 		return 1;
 	}
 
-	if ( image.cols * 2 == cv::countNonZero( image.rowRange( image.rows-2, image.rows )) )
+	nonzero = cv::countNonZero( image.rowRange( image.rows-2, image.rows ));
+	if ( image.cols * 2 == nonzero )
 	{
 		// 2 下端2段がすべて輝点
 		return 2;
 	}
 
-	if ( image.cols * 2 == cv::countNonZero( image.rowRange( 0, 2 )) )
+	nonzero = cv::countNonZero( image.rowRange( 0, 2 ));
+	if ( image.cols * 2 == nonzero )
 	{
 		// 7 上端2段がすべて輝点
 		return 7;
 	}
-	if ( image.rows * 2 == cv::countNonZero( image.colRange( image.cols-3, image.cols-1 )) )
+
+	nonzero = cv::countNonZero( image.colRange( image.cols-3, image.cols-1 ));
+	if ( image.rows * 2 == nonzero )
 	{
 		// 4 右端の左2列がすべて輝点
 		return 4;
@@ -151,14 +142,27 @@ int recognizeNumeric ( const cv::Mat image )
 		// 輪郭数2．0, 6, 9のいずれか
 		// 第2輪郭始点が上部3分の1にないとき6
 		if ( contours[1][0].y > (image.rows/3) )
-		{	
-			return 6;		
+		{
+			return 6;
 		}
+		
+		// 下部3分の1に第2輪郭があるとき0
+		for ( size_t n = 0; n < contours[1].size(); n++ )
+		{
+			if ( contours[1][n].y > (image.rows*2/3) )
+				return 0;
+		}
+
+		return 9;
 	}
 
+	// 右上隅が輝点なら5
+	if ( 255 == image.at<unsigned char>( image.cols-1 ) )
+	{
+		return 5;
+	}
 
-
-	return 0;
+	return 3;
 }
 
 class CharactersInfo
@@ -273,7 +277,8 @@ public:
 		a++;
 		showrite( ss.str(), image( positions[n] ));
 
-		return recognizeNumeric ( characterImage ( n ) );
+		int value = recognizeNumeric ( characterImage ( n ) );
+		return value;
 	}
 
 };
