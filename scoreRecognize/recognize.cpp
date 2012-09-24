@@ -90,8 +90,73 @@ struct Score
 	}
 };
 
-int recognizeNumeric ( const cv::Mat image, const size_t n )
+// 数字認識
+int recognizeNumeric ( const cv::Mat image )
 {
+	/*
+	1 右端2列がすべて輝点
+	2 下端2段がすべて輝点
+	7 上端2段がすべて輝点
+	4 右端の左2列がすべて輝点
+	輪郭抽出
+	8 輪郭が3個
+	3, 5 輪郭が1個
+		3 右上隅が暗点
+		5 右上隅が輝点
+	0 6 9 輪郭が2個
+		6 第2輪郭が上3分の1にない
+		0 中央列が輝点，暗点，輝点
+		9 上記以外
+	*/
+
+	if ( image.rows * 2 == cv::countNonZero( image.colRange( image.cols-2, image.cols )) )
+	{
+		// 1 右端2列がすべて輝点
+		return 1;
+	}
+
+	if ( image.cols * 2 == cv::countNonZero( image.rowRange( image.rows-2, image.rows )) )
+	{
+		// 2 下端2段がすべて輝点
+		return 2;
+	}
+
+	if ( image.cols * 2 == cv::countNonZero( image.rowRange( 0, 2 )) )
+	{
+		// 7 上端2段がすべて輝点
+		return 7;
+	}
+	if ( image.rows * 2 == cv::countNonZero( image.colRange( image.cols-3, image.cols-1 )) )
+	{
+		// 4 右端の左2列がすべて輝点
+		return 4;
+	}
+
+	// 輪郭抽出
+	// 輪郭情報
+	std::vector<std::vector<cv::Point> > contours;
+	// 階層構造
+	std::vector<cv::Vec4i> hierarchy;
+	// 2値画像，輪郭（出力），階層構造（出力），輪郭抽出モード，輪郭の近似手法
+	cv::findContours(image, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+
+	if ( 3 == hierarchy.size() )
+	{
+		// 輪郭数3
+		return 8;
+	}
+
+	if ( 2 == hierarchy.size() )
+	{
+		// 輪郭数2．0, 6, 9のいずれか
+		// 第2輪郭始点が上部3分の1にないとき6
+		if ( contours[1][0].y > (image.rows/3) )
+		{	
+			return 6;		
+		}
+	}
+
+
 
 	return 0;
 }
@@ -208,7 +273,7 @@ public:
 		a++;
 		showrite( ss.str(), image( positions[n] ));
 
-		return recognizeNumeric ( characterImage ( n ), n );
+		return recognizeNumeric ( characterImage ( n ) );
 	}
 
 };
@@ -264,9 +329,16 @@ int main(int argc, char *argv[])
 {
 	// テスト画像選択
 	std::vector<std::string> testFiles;
-	testFiles.push_back( "1.png" ); // 14
-	testFiles.push_back( "5.png" ); // 14
-	testFiles.push_back( "player.png" ); // 14
+	testFiles.push_back( "300scoreRow.png" );
+	testFiles.push_back( "301scoreRow.png" );
+	testFiles.push_back( "302scoreRow.png" );
+	testFiles.push_back( "303scoreRow.png" );
+	testFiles.push_back( "304scoreRow.png" );
+	testFiles.push_back( "305scoreRow.png" );
+	testFiles.push_back( "306scoreRow.png" );
+	testFiles.push_back( "307scoreRow.png" );
+	testFiles.push_back( "308scoreRow.png" );
+	testFiles.push_back( "309scoreRow.png" );
 	// 画像読み込み
 	cv::vector<cv::Mat> testImages;
 	for ( size_t i = 0; i <testFiles.size(); i++ )
