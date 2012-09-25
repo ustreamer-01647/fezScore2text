@@ -125,12 +125,13 @@ int recognizeNumeric ( const cv::Mat image )
 
 	// 輪郭抽出
 	// 輪郭情報
-	std::vector<std::vector<cv::Point> > contours;
+	cv::vector<cv::vector<cv::Point> > contours;
 	// 階層構造
-	std::vector<cv::Vec4i> hierarchy;
+	cv::vector<cv::Vec4i> hierarchy;
 	// 2値画像，輪郭（出力），階層構造（出力），輪郭抽出モード，輪郭の近似手法
 	cv::findContours(image, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
 
+	return 0;
 	if ( 3 == hierarchy.size() )
 	{
 		// 輪郭数3
