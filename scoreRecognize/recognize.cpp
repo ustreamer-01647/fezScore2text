@@ -4,6 +4,7 @@
 
 #include "recognize.h"
 
+#include <iostream>
 #include <sstream>
 
 #include<opencv2/core/core.hpp>
@@ -42,7 +43,7 @@ struct Score
 	// 順位
 	int rank;
 	static const int RankOffset = 0;
-	static const int RankWidth = 14;
+	static const int RankWidth = 20;
 	// キャラクタ名
 	std::string name;
 	static const int NameOffset = 29;
@@ -88,10 +89,17 @@ struct Score
 		pcDamage = 0;
 		objectDamage = 0;
 	}
+
+	void dump()
+	{
+		std::cout << rank << ", " << name << ", " << nationality << ", " << job << ", "
+			<< kill << ", " << dead << ", " <<  contribution << ", "
+			<< pcDamage << ", " << objectDamage << std::endl;
+	}
 };
 
 // 数字認識
-int recognizeNumeric ( const cv::Mat image )
+int recognizeDigit ( const cv::Mat image )
 {
 	int nonzero = 0;
 
@@ -123,47 +131,43 @@ int recognizeNumeric ( const cv::Mat image )
 		return 4;
 	}
 
-	// 輪郭抽出
-	// 輪郭情報
-	cv::vector<cv::vector<cv::Point> > contours;
-	// 階層構造
-	cv::vector<cv::Vec4i> hierarchy;
-	// 2値画像，輪郭（出力），階層構造（出力），輪郭抽出モード，輪郭の近似手法
-	cv::findContours(image, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
-
-	return 0;
-	if ( 3 == hierarchy.size() )
+	nonzero = cv::countNonZero( image( cv::Rect( 0, 0, 1, image.rows*2/3 ) ));
+	if ( 0 == nonzero )
 	{
-		// 輪郭数3
-		return 8;
+		// 3 左端の上部3分の2がすべて暗点
+		return 3;
 	}
 
-	if ( 2 == hierarchy.size() )
+	nonzero = cv::countNonZero( image( cv::Rect( 0, image.rows/2, 3, 2 ) ));
+	if ( 0 == nonzero )
 	{
-		// 輪郭数2．0, 6, 9のいずれか
-		// 第2輪郭始点が上部3分の1にないとき6
-		if ( contours[1][0].y > (image.rows/3) )
-		{
-			return 6;
-		}
-		
-		// 下部3分の1に第2輪郭があるとき0
-		for ( size_t n = 0; n < contours[1].size(); n++ )
-		{
-			if ( contours[1][n].y > (image.rows*2/3) )
-				return 0;
-		}
-
-		return 9;
-	}
-
-	// 右上隅が輝点なら5
-	if ( 255 == image.at<unsigned char>( image.cols-1 ) )
-	{
+		// 左端の下半分開始すぐの3x2がすべて暗点
 		return 5;
 	}
 
-	return 3;
+	nonzero = cv::countNonZero( image( cv::Rect( image.cols/2, image.rows/2-1, 1, 3 ) ));
+	if ( 0 == nonzero )
+	{
+		// 中央列中央3ピクセルがすべて暗点
+		return 0;
+	}
+
+	nonzero = cv::countNonZero( image( cv::Rect( image.cols-1, 0, 1, image.rows*2/5 ) ));
+	if ( 0 == nonzero )
+	{
+		// 右端上部5分の2がすべて暗点
+		return 6;
+	}
+
+	nonzero = cv::countNonZero( image( cv::Rect( image.cols-1, image.rows-3, 1, 3 ) ));
+	if ( 0 == nonzero )
+	{
+		// 右端下部3ピクセルがすべて暗点
+		return 9;
+	}
+
+	// 上記条件に当てはまらない場合
+	return 8;
 }
 
 class CharactersInfo
@@ -266,19 +270,20 @@ public:
 	}
 
 	// 数字認識
-	int getNumeric ( size_t n )
+	int getDigit ( size_t n )
 	{
 		// 文字がないときは 0
 		if ( 0 == size() )
 			return 0;
 
-		static int a = 0;
-		std::stringstream ss;
-		ss << "char" << a << ".png";
-		a++;
-		showrite( ss.str(), image( positions[n] ));
+		// 文字出力
+		//static int a = 0;
+		//std::stringstream ss;
+		//ss << "char" << a << ".png";
+		//a++;
+		//showrite( ss.str(), image( positions[n] ));
 
-		int value = recognizeNumeric ( characterImage ( n ) );
+		int value = recognizeDigit ( characterImage ( n ) );
 		return value;
 	}
 
@@ -291,13 +296,16 @@ int recognizeInteger ( const cv::Mat image )
 	CharactersInfo charactersInfo( image );
 
 	// 数値認識
-	std::stringstream integer;
+	std::stringstream ss;
 	for ( size_t n = 0; n < charactersInfo.size(); n++ )
 	{
-		integer << charactersInfo.getNumeric ( n );
+		ss << charactersInfo.getDigit ( n );
 	}
+
+	int integer;
+	ss >> integer;
 	
-	return 0;
+	return integer;
 }
 
 // キャラクタスコア認識
@@ -306,9 +314,10 @@ void recognize ( const cv::vector<cv::Mat> images, std::vector<struct Score> &sc
 	for ( size_t i = 0; i < images.size(); i++ )
 	{
 		struct Score score;
-		
+		int integer = 0;
 		// 順位
-		recognizeInteger( images[i]( cv::Rect ( Score::RankOffset, 0, Score::RankWidth, images[i].rows )));
+		integer = recognizeInteger( images[i]( cv::Rect ( Score::RankOffset, 0, Score::RankWidth, images[i].rows )));
+		score.rank = integer;
 		// キャラクタ名
 		//recognizeText ( images[i], Score::NameOffset, Score::NameWidth );
 		// 所属国
@@ -316,16 +325,22 @@ void recognize ( const cv::vector<cv::Mat> images, std::vector<struct Score> &sc
 		// クラス
 		//recognizeText ( images[i], Score::JobOffset, Score::JobWidth );
 		// キル数
-		recognizeInteger ( images[i]( cv::Rect( Score::KillOffset, 0, Score::KillWidth, images[i].rows )));
+		integer = recognizeInteger ( images[i]( cv::Rect( Score::KillOffset, 0, Score::KillWidth, images[i].rows )));
+		score.kill = integer;
 		// デッド数
-		recognizeInteger ( images[i]( cv::Rect( Score::DeadOffset, 0, Score::DeadWidth, images[i].rows )));
+		integer = recognizeInteger ( images[i]( cv::Rect( Score::DeadOffset, 0, Score::DeadWidth, images[i].rows )));
+		score.dead = integer;
 		// 貢献度
-		recognizeInteger ( images[i]( cv::Rect( Score::ContributionOffset, 0, Score::ContributionWidth, images[i].rows )));
+		integer = recognizeInteger ( images[i]( cv::Rect( Score::ContributionOffset, 0, Score::ContributionWidth, images[i].rows )));
+		score.contribution = integer;
 		// PC与ダメージ
-		recognizeInteger ( images[i]( cv::Rect( Score::PcDamageOffset, 0, Score::PcDamageWidth, images[i].rows )));
+		integer = recognizeInteger ( images[i]( cv::Rect( Score::PcDamageOffset, 0, Score::PcDamageWidth, images[i].rows )));
+		score.pcDamage = integer;
 		// 建物与ダメージ
-		recognizeInteger ( images[i].colRange( Score::ObjectDamageOffset, images[i].cols));
+		integer = recognizeInteger ( images[i].colRange( Score::ObjectDamageOffset, images[i].cols));
+		score.objectDamage = integer;
 
+		score.dump();
 		scores.push_back ( score );
 	}
 
