@@ -23,7 +23,7 @@ struct Score
 	// Š‘®‘
 	enum Nationality nationality;
 	static const int NationalityOffset = 180;
-	static const int NationalityWidth = 18;
+	static const int NationalityWidth = 24;
 	// ƒNƒ‰ƒX
 	enum Job job;
 	static const int JobOffset = 225;
