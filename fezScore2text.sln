@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "scoreExtract", "scoreExtrac
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "scoreRecognize", "scoreRecognize\scoreRecognize.vcxproj", "{107C64C1-7041-47C1-8EF3-BF2D5D206DDB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ss2text", "ss2text\ss2text.vcxproj", "{C77510E5-01E5-40FC-92E8-04195010387D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -25,6 +27,10 @@ Global
 		{107C64C1-7041-47C1-8EF3-BF2D5D206DDB}.Debug|Win32.Build.0 = Debug|Win32
 		{107C64C1-7041-47C1-8EF3-BF2D5D206DDB}.Release|Win32.ActiveCfg = Release|Win32
 		{107C64C1-7041-47C1-8EF3-BF2D5D206DDB}.Release|Win32.Build.0 = Release|Win32
+		{C77510E5-01E5-40FC-92E8-04195010387D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C77510E5-01E5-40FC-92E8-04195010387D}.Debug|Win32.Build.0 = Debug|Win32
+		{C77510E5-01E5-40FC-92E8-04195010387D}.Release|Win32.ActiveCfg = Release|Win32
+		{C77510E5-01E5-40FC-92E8-04195010387D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
