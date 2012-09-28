@@ -65,7 +65,7 @@ cv::Mat removeNoise ( const cv::Mat image )
 	cv::Mat workImage = cv::Mat::zeros( image.rows+2, image.cols+2, image.type() );
 	// çÏã∆ópçsóÒÇ…imageÇì¸óÕÇ∑ÇÈ
 	image.copyTo( workImage( cv::Rect( 1, 1, image.cols, image.rows ) ));
-	showrite( "21workImage.png", workImage );
+	//showrite( "21workImage.png", workImage );
 
 	// ëñç∏
 	for ( int row = 0; row < image.rows; row++ )
@@ -82,7 +82,7 @@ cv::Mat removeNoise ( const cv::Mat image )
 				workImage.at<unsigned char>( row+1, col+1 ) = 0;
 		}
 	}
-	showrite( "22workImage.png", workImage );
+	//showrite( "22workImage.png", workImage );
 
 	return workImage( cv::Rect( 1, 1, image.cols, image.rows ) );
 }

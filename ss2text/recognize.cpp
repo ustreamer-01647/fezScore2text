@@ -50,7 +50,7 @@ int recognizeDigit ( const cv::Mat image )
 	nonzero = cv::countNonZero( image.rowRange( 0, 2 ));
 	if ( image.cols * 2 - 2 < nonzero )
 	{
-		// 7 上端2段がすべて輝点．ただし2ピクセルまで欠けても良い
+		// 7 上端2段がすべて輝点．ただし1ピクセルまで欠けても良い
 		return 7;
 	}
 

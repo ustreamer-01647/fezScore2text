@@ -7,7 +7,7 @@
 int main ( int argc, char *argv[] )
 {
 	// ss“Ç‚İ‚İ
-	cv::Mat ss = cv::imread("ss2.png");
+	cv::Mat ss = cv::imread("ss3.png");
 
 	// Ø‚èo‚µ
 	cv::Mat scoreTable = extractScoreTable( ss );
