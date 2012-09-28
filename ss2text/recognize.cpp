@@ -24,6 +24,13 @@ static void showrite(const std::string s, cv::Mat &image)
 // 数字認識
 int recognizeDigit ( const cv::Mat image )
 {
+	//static int n = 0;
+	//std::stringstream ss;
+	//ss << "char" << n << ".png";
+	//cv::Mat theclone = image.clone();
+	//showrite( ss.str(), theclone);
+	//n++;
+
 	int nonzero = 0;
 
 	nonzero = cv::countNonZero( image.colRange( image.cols-2, image.cols ));
@@ -41,9 +48,9 @@ int recognizeDigit ( const cv::Mat image )
 	}
 
 	nonzero = cv::countNonZero( image.rowRange( 0, 2 ));
-	if ( image.cols * 2 == nonzero )
+	if ( image.cols * 2 - 2 < nonzero )
 	{
-		// 7 上端2段がすべて輝点
+		// 7 上端2段がすべて輝点．ただし2ピクセルまで欠けても良い
 		return 7;
 	}
 
@@ -91,6 +98,20 @@ int recognizeDigit ( const cv::Mat image )
 
 	// 上記条件に当てはまらない場合
 	return 8;
+}
+
+// 所属国認識
+enum Nationality recognizeNationality ( const cv::Mat image )
+{
+	// yellow hor 40
+	// green ces 80
+	// blue iel 160
+	// purple geb 200
+	// red net 
+
+
+
+	return Nationality::NUnknown;
 }
 
 // 画像から数値を読み出す

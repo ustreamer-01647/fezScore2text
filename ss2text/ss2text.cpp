@@ -7,7 +7,7 @@
 int main ( int argc, char *argv[] )
 {
 	// ss“Ç‚İ‚İ
-	cv::Mat ss = cv::imread("ss.png");
+	cv::Mat ss = cv::imread("ss2.png");
 
 	// Ø‚èo‚µ
 	cv::Mat scoreTable = extractScoreTable( ss );
@@ -20,6 +20,7 @@ int main ( int argc, char *argv[] )
 	recognize( scoreTable, scoreTableBinary, scores );
 
 	// •\¦
+	cv::waitKey();
 
 	return 0;
 }
