@@ -44,9 +44,9 @@ void extractScoreRows( const cv::Mat scoreTable, cv::vector<cv::Mat> &scoreRows 
 			0, i * ( ScoreRowHeight + ScoreRowInterval ), scoreTable.cols, ScoreRowHeight ) );
 		scoreRows.push_back ( scoreRow );
 		
-		std::stringstream ss;
-		ss << "30" << i << "scoreRow.png"; 
-		showrite( ss.str(), scoreRow );
+		//std::stringstream ss;
+		//ss << "30" << i << "scoreRow.png"; 
+		//showrite( ss.str(), scoreRow );
 	}
 
 	// 自キャラクタスコア
@@ -54,7 +54,7 @@ void extractScoreRows( const cv::Mat scoreTable, cv::vector<cv::Mat> &scoreRows 
 			scoreTable( cv::Rect( 
 			0, scoreTable.rows - ScoreRowHeight, scoreTable.cols, ScoreRowHeight ) );
 		scoreRows.push_back ( scoreRow );
-	showrite( "35scoreRow.png", scoreRow );
+	//showrite( "35scoreRow.png", scoreRow );
 }
 
 // 孤立輝点除去
