@@ -6,6 +6,7 @@
 #include<opencv2/features2d/features2d.hpp>
 
 #include "extract.h"
+#include "Score.h"
 
 
 static void showrite(const std::string s, cv::Mat &image)
@@ -33,6 +34,21 @@ cv::Mat extractScoreTable ( const cv::Mat ss )
 const int ScoreRowHeight = 17;
 const int ScoreRowInterval = 15;
 const int ScoreTop10Rows = 10;
+
+// n番目アイコン部分を返す
+cv::Mat extractColorNationality( const cv::Mat scoreTable, const int n)
+{
+	if ( n < 10 )
+	{
+		// ランキング部分から抽出
+		return scoreTable( cv::Rect( Score::NationalityOffset, n * ( ScoreRowHeight + ScoreRowInterval ), 
+			Score::NationalityWidth, ScoreRowHeight ) );
+	}
+
+	// プレイヤーキャラクタから抽出
+	return scoreTable( cv::Rect( Score::NationalityOffset, scoreTable.rows - ScoreRowHeight, 
+		Score::NationalityWidth, ScoreRowHeight) );
+}
 
 void extractScoreRows( const cv::Mat scoreTable, cv::vector<cv::Mat> &scoreRows )
 {

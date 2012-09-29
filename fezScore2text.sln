@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "scoreRecognize", "scoreReco
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ss2text", "ss2text\ss2text.vcxproj", "{C77510E5-01E5-40FC-92E8-04195010387D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "recognizeNation", "recognizeNation\recognizeNation.vcxproj", "{046A680C-B36F-409E-AF09-165198B1F9AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +33,10 @@ Global
 		{C77510E5-01E5-40FC-92E8-04195010387D}.Debug|Win32.Build.0 = Debug|Win32
 		{C77510E5-01E5-40FC-92E8-04195010387D}.Release|Win32.ActiveCfg = Release|Win32
 		{C77510E5-01E5-40FC-92E8-04195010387D}.Release|Win32.Build.0 = Release|Win32
+		{046A680C-B36F-409E-AF09-165198B1F9AE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{046A680C-B36F-409E-AF09-165198B1F9AE}.Debug|Win32.Build.0 = Debug|Win32
+		{046A680C-B36F-409E-AF09-165198B1F9AE}.Release|Win32.ActiveCfg = Release|Win32
+		{046A680C-B36F-409E-AF09-165198B1F9AE}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

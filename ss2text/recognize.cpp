@@ -8,7 +8,6 @@
 #include<opencv2/core/core.hpp>
 #include<opencv2/highgui/highgui.hpp>
 #include<opencv2/imgproc/imgproc.hpp>
-#include<opencv2/features2d/features2d.hpp>
 
 #include "Score.h"
 #include "recognize.h"
@@ -103,13 +102,46 @@ int recognizeDigit ( const cv::Mat image )
 // 所属国認識
 enum Nationality recognizeNationality ( const cv::Mat image )
 {
-	// yellow hor 40
-	// green ces 80
-	// blue iel 160
-	// purple geb 200
-	// red net 
+	// 2値画像の輝点数を基に判別する
+	// ces: 25
+	// geb: 52
+	// hor: 99
+	// http://twitpic.com/az9oy2
 
+	int count = cv::countNonZero( image );
+	if ( count > 80 )
+		return Nationality::NHordaine;
 
+	if ( count > 45 )
+		return Nationality::NGeburand;
+
+	if ( count > 15 )
+		return Nationality::NCesedria;
+
+	return Nationality::NUnknown;
+}
+
+// 所属国認識
+// recognizeNationalityで判断できなかった場合，カラー画像を基に判別する
+enum Nationality recognizeNationality2 ( const cv::Mat image )
+{
+	// 閾値130.0で2値化した画像を基にする
+
+	cv::Mat gray;
+	cv::cvtColor( image, gray, CV_BGR2GRAY );
+	cv::Mat bin;
+	cv::threshold( gray, bin, 130.0, 255.0, CV_THRESH_BINARY );
+	
+	// iel: 7
+	// net: 23
+	// http://twitpic.com/azbzjh
+
+	int count = cv::countNonZero( bin.rowRange( 2, bin.rows ) );
+	if ( count > 15 )
+		return Nationality::NNetzawar;
+
+	if ( count > 3 )
+		return Nationality::NIelsord;
 
 	return Nationality::NUnknown;
 }
@@ -178,7 +210,7 @@ void recognize ( const cv::Mat ss, std::vector<struct Score> &scores )
 
 	// 2値画像を作る
 	cv::Mat scoreTableBinary = scoreTable2Binary( scoreTable );
-	showrite( "table.png", scoreTableBinary );
+	//showrite( "table.png", scoreTableBinary );
 
 	// キャラクタスコア切り出し
 	cv::vector<cv::Mat> scoreRows;
@@ -197,8 +229,12 @@ void recognize ( const cv::Mat ss, std::vector<struct Score> &scores )
 		// キャラクタ名
 		//recognizeText ( scoreRows[n], Score::NameOffset, Score::NameWidth );
 		// 所属国
-		//nationality = recognizeNationalityIcon ( scoreRows[n], Score::NationalityOffset, Score::NationalityWidth );
-		//score.nationality = nationality;
+		nationality = recognizeNationality ( scoreRows[n] ( cv::Rect( Score::NationalityOffset, 0, Score::NationalityWidth, scoreRows[n].rows )));
+		if ( nationality == NUnknown )
+		{
+			nationality = recognizeNationality2( extractColorNationality( scoreTable, n) );
+		}
+		score.nationality = nationality;
 		// クラス
 		//recognizeText ( scoreRows[n], Score::JobOffset, Score::JobWidth );
 		// キル数

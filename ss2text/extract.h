@@ -13,3 +13,5 @@ cv::Mat removeNoise ( const cv::Mat image );
 void extractScoreRows( const cv::Mat scoreTable, cv::vector<cv::Mat> &scoreRows );
 
 cv::Mat scoreTable2Binary( const cv::Mat scoreTable );
+
+cv::Mat extractColorNationality( const cv::Mat scoreTable, const int n);

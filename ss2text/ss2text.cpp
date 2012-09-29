@@ -7,7 +7,7 @@
 int main ( int argc, char *argv[] )
 {
 	// ss読み込み
-	cv::Mat ss = cv::imread("ss2.png");
+	cv::Mat ss = cv::imread("ss3.png");
 
 	// スコア読み出し
 	std::vector<Score> scores;
