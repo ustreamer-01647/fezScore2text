@@ -171,15 +171,18 @@ void recognize ( const cv::vector<cv::Mat> images, std::vector<struct Score> &sc
 
 }
 
-void recognize ( const cv::Mat scoreTable, const cv::Mat scoreTableBinary, std::vector<struct Score> &scores )
+void recognize ( const cv::Mat ss, std::vector<struct Score> &scores )
 {
-	// カラー画像
+	// 切り出し
+	cv::Mat scoreTable = extractScoreTable( ss );
+
+	// 2値画像を作る
+	cv::Mat scoreTableBinary = scoreTable2Binary( scoreTable );
+	showrite( "table.png", scoreTableBinary );
+
+	// キャラクタスコア切り出し
 	cv::vector<cv::Mat> scoreRows;
-	extractScoreRows( scoreTable, scoreRows );
-	
-	// 2値画像
-	cv::vector<cv::Mat> scoreRowsBinary;
-	extractScoreRows( scoreTableBinary, scoreRowsBinary );
+	extractScoreRows( scoreTableBinary, scoreRows );
 
 	for ( size_t n = 0; n < scoreRows.size(); n++ )
 	{
@@ -189,29 +192,29 @@ void recognize ( const cv::Mat scoreTable, const cv::Mat scoreTableBinary, std::
 		enum Job job = Job::JUnknown;
 
 		// 順位
-		integer = recognizeInteger( scoreRowsBinary[n]( cv::Rect ( Score::RankOffset, 0, Score::RankWidth, scoreRowsBinary[n].rows )));
+		integer = recognizeInteger( scoreRows[n]( cv::Rect ( Score::RankOffset, 0, Score::RankWidth, scoreRows[n].rows )));
 		score.rank = integer;
 		// キャラクタ名
-		//recognizeText ( scoreRowsBinary[n], Score::NameOffset, Score::NameWidth );
+		//recognizeText ( scoreRows[n], Score::NameOffset, Score::NameWidth );
 		// 所属国
 		//nationality = recognizeNationalityIcon ( scoreRows[n], Score::NationalityOffset, Score::NationalityWidth );
 		//score.nationality = nationality;
 		// クラス
-		//recognizeText ( scoreRowsBinary[n], Score::JobOffset, Score::JobWidth );
+		//recognizeText ( scoreRows[n], Score::JobOffset, Score::JobWidth );
 		// キル数
-		integer = recognizeInteger ( scoreRowsBinary[n]( cv::Rect( Score::KillOffset, 0, Score::KillWidth, scoreRowsBinary[n].rows )));
+		integer = recognizeInteger ( scoreRows[n]( cv::Rect( Score::KillOffset, 0, Score::KillWidth, scoreRows[n].rows )));
 		score.kill = integer;
 		// デッド数
-		integer = recognizeInteger ( scoreRowsBinary[n]( cv::Rect( Score::DeadOffset, 0, Score::DeadWidth, scoreRowsBinary[n].rows )));
+		integer = recognizeInteger ( scoreRows[n]( cv::Rect( Score::DeadOffset, 0, Score::DeadWidth, scoreRows[n].rows )));
 		score.dead = integer;
 		// 貢献度
-		integer = recognizeInteger ( scoreRowsBinary[n]( cv::Rect( Score::ContributionOffset, 0, Score::ContributionWidth, scoreRowsBinary[n].rows )));
+		integer = recognizeInteger ( scoreRows[n]( cv::Rect( Score::ContributionOffset, 0, Score::ContributionWidth, scoreRows[n].rows )));
 		score.contribution = integer;
 		// PC与ダメージ
-		integer = recognizeInteger ( scoreRowsBinary[n]( cv::Rect( Score::PcDamageOffset, 0, Score::PcDamageWidth, scoreRowsBinary[n].rows )));
+		integer = recognizeInteger ( scoreRows[n]( cv::Rect( Score::PcDamageOffset, 0, Score::PcDamageWidth, scoreRows[n].rows )));
 		score.pcDamage = integer;
 		// 建物与ダメージ
-		integer = recognizeInteger ( scoreRowsBinary[n].colRange( Score::ObjectDamageOffset, scoreRowsBinary[n].cols));
+		integer = recognizeInteger ( scoreRows[n].colRange( Score::ObjectDamageOffset, scoreRows[n].cols));
 		score.objectDamage = integer;
 
 		score.dump();
