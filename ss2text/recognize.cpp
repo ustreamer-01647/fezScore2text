@@ -165,7 +165,52 @@ int recognizeInteger ( const cv::Mat image )
 	return integer;
 }
 
+// クラス認識
+enum Job recognizeJob ( const cv::Mat image )
+{
+	// 文字列情報
+	// 「リ」は2文字扱い
+	CharactersInfo charactersInfo ( image );
+
+	// 6字：ウォリアー
+	if ( 6 == charactersInfo.size() )
+	{
+		return Job::JWarrior;
+	}
+
+	// 5字：ソーサラー，フェンサー
+	if ( 5 == charactersInfo.size() )
+	{
+		int second = cv::countNonZero( charactersInfo.characterImage( 1 ) );
+		int fifth = cv::countNonZero( charactersInfo.characterImage( 4 ) );
+		// 第2字と第5字の輝点数差が3以下なら同一文字とみなし，ソーサラー扱い
+		int diff = second - fifth;
+		if ( diff * diff < 3 * 3 )
+		{
+			return Job::JSorcerer;
+		}
+		return Job::JFencer;
+	}
+
+	// 4字：スカウト，セスタス
+	if ( 4 == charactersInfo.size() )
+	{
+		int second = cv::countNonZero( charactersInfo.characterImage( 1 ) );
+		int fourth = cv::countNonZero( charactersInfo.characterImage( 3 ) );
+		// 第2字と第4字の輝点数差が3以下なら同一文字とみなし，セスタス扱い
+		int diff = second - fourth;
+		if ( diff * diff < 3 * 3 )
+		{
+			return Job::JCestas;
+		}
+		return Job::JScout;
+	}
+
+	return Job::JUnknown;
+}
+
 // キャラクタスコア認識
+// 使わない
 void recognize ( const cv::vector<cv::Mat> images, std::vector<struct Score> &scores )
 {
 	for ( size_t i = 0; i < images.size(); i++ )
@@ -203,6 +248,10 @@ void recognize ( const cv::vector<cv::Mat> images, std::vector<struct Score> &sc
 
 }
 
+/** キャラクタスコア認識
+@param ss fezのスクリーンショット
+@param scores 認識したスコアデータ入力先
+*/
 void recognize ( const cv::Mat ss, std::vector<struct Score> &scores )
 {
 	// 切り出し
@@ -236,7 +285,8 @@ void recognize ( const cv::Mat ss, std::vector<struct Score> &scores )
 		}
 		score.nationality = nationality;
 		// クラス
-		//recognizeText ( scoreRows[n], Score::JobOffset, Score::JobWidth );
+		job = recognizeJob ( scoreRows[n]( cv::Rect (Score::JobOffset, 0, Score::JobWidth, scoreRows[n].rows )));
+		score.job = job;
 		// キル数
 		integer = recognizeInteger ( scoreRows[n]( cv::Rect( Score::KillOffset, 0, Score::KillWidth, scoreRows[n].rows )));
 		score.kill = integer;

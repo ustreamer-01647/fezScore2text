@@ -13,6 +13,11 @@ int main ( int argc, char *argv[] )
 	std::vector<Score> scores;
 	recognize( ss, scores );
 
+	for ( size_t n = 0; n < scores.size(); n++ )
+	{
+		std::cout << scores[n].toString() << std::endl;
+	}
+
 	// •\Ž¦
 	cv::waitKey();
 
