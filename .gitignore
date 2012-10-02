@@ -1,4 +1,4 @@
-# .pngは要らん
+# テスト用画像は著作権処理が面倒だから排除
 *.png
 
 # VS Express for Desktop
@@ -7,16 +7,3 @@
 *.opensdf
 \Debug
 \Release
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-
-# Compiled Dynamic libraries
-*.so
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
