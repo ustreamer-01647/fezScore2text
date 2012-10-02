@@ -168,9 +168,21 @@ int recognizeInteger ( const cv::Mat image )
 // クラス認識
 enum Job recognizeJob ( const cv::Mat image )
 {
+
 	// 文字列情報
 	// 「リ」は2文字扱い
 	CharactersInfo charactersInfo ( image );
+
+	// 文字確認出力
+	static int counter = 0;
+	std::stringstream ss;
+	for ( size_t n = 0; n < charactersInfo.size(); n++ )
+	{
+		ss << "char" << counter << "x" << n << ".png";
+		showrite( ss.str(), charactersInfo.characterImage(n));
+		ss.str("");
+	}
+	counter++;
 
 	// 6字：ウォリアー
 	if ( 6 == charactersInfo.size() )

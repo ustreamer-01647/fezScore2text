@@ -117,7 +117,7 @@ struct Score
 		std::stringstream ss;
 		ss << rank << ", " << name << ", " << n<< ", " << j << ", "
 			<< kill << ", " << dead << ", " <<  contribution << ", "
-			<< pcDamage << ", " << objectDamage << std::endl;
+			<< pcDamage << ", " << objectDamage;
 
 		return ss.str();
 
