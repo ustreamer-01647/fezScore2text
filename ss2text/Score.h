@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <string>
-
+#include <sstream>
 
 // 国家
 enum Nationality { NUnknown, NNetzawar, NIelsord, NHordaine, NGeburand, NCesedria };
@@ -67,5 +67,61 @@ struct Score
 		std::cout << rank << ", " << name << ", " << nationality << ", " << job << ", "
 			<< kill << ", " << dead << ", " <<  contribution << ", "
 			<< pcDamage << ", " << objectDamage << std::endl;
+	}
+
+	std::string getNation()
+	{
+		switch ( nationality )
+		{
+		case NNetzawar:
+			return "ネツァワル";
+		case NIelsord:
+			return "エルソード";
+		case NHordaine:
+			return "ホルデイン";
+		case NGeburand:
+			return "ゲブランド";
+		case NCesedria:
+			return "カセドリア";
+		case NUnknown:
+		default:
+			return "不明";
+		}
+	}
+
+	std::string getJob()
+	{
+		switch ( job )
+		{
+		case Job::JWarrior:
+			return "ウォリアー";
+		case Job::JScout:
+			return "スカウト";
+		case Job::JSorcerer:
+			return "ソーサラー";
+		case Job::JFencer:
+			return "フェンサー";
+		case Job::JCestas:
+			return "セスタス";
+		case Job::JUnknown:
+		default:
+			return "不明";
+		}
+	}
+
+	std::string toString()
+	{
+		std::string n = getNation();
+		std::string j = getJob();
+
+		std::stringstream ss;
+		ss << rank << ", " << name << ", " << n<< ", " << j << ", "
+			<< kill << ", " << dead << ", " <<  contribution << ", "
+			<< pcDamage << ", " << objectDamage << std::endl;
+
+		return ss.str();
+
+		//return rank + ", " + name + ", " + n + ", " + j + ", " + kill + ", " + dead + ", " + contribution
+		//	+ ", " + pcDamage + ", " + objectDamage;
 	}
 };
