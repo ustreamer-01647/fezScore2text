@@ -174,23 +174,17 @@ enum Job recognizeJob ( const cv::Mat image )
 	CharactersInfo charactersInfo ( image );
 
 	// 文字確認出力
-	static int counter = 0;
-	std::stringstream ss;
-	for ( size_t n = 0; n < charactersInfo.size(); n++ )
-	{
-		ss << "char" << counter << "x" << n << ".png";
-		showrite( ss.str(), charactersInfo.characterImage(n));
-		ss.str("");
-	}
-	counter++;
+	//static int counter = 0;
+	//std::stringstream ss;
+	//for ( size_t n = 0; n < charactersInfo.size(); n++ )
+	//{
+	//	ss << "char" << counter << "x" << n << ".png";
+	//	showrite( ss.str(), charactersInfo.characterImage(n));
+	//	ss.str("");
+	//}
+	//counter++;
 
-	// 6字：ウォリアー
-	if ( 6 == charactersInfo.size() )
-	{
-		return Job::JWarrior;
-	}
-
-	// 5字：ソーサラー，フェンサー
+	// 5字：ソーサラー，ウォリアー，フェンサー
 	if ( 5 == charactersInfo.size() )
 	{
 		int second = cv::countNonZero( charactersInfo.characterImage( 1 ) );
@@ -201,7 +195,13 @@ enum Job recognizeJob ( const cv::Mat image )
 		{
 			return Job::JSorcerer;
 		}
-		return Job::JFencer;
+		// 第1字最上段がすべて輝点ならばフェンサー
+		int nonzero = cv::countNonZero( charactersInfo.characterImage(0).rowRange( 0, 1 ) );
+		if ( nonzero == charactersInfo.characterImage(0).cols )
+		{
+			return Job::JFencer;
+		}
+		return Job::JWarrior;
 	}
 
 	// 4字：スカウト，セスタス
