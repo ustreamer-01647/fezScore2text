@@ -51,7 +51,7 @@ struct Score
 
 	Score()
 	{
-		int rank = 0;
+		rank = 0;
 		name = "774";
 		nationality = NUnknown;
 		job = JUnknown;
