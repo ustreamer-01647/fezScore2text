@@ -108,42 +108,18 @@ namespace ss2textCS
             {
                 return image;
             }
-            return image.GetSubArr(positions[n]);
+            return image.GetSubArr(out image, positions[n]);
         }
 
+        // 数字認識
+        int getDigit(int n)
+        {
+            if (0 == size())
+                return 0;
 
-//    // 文字数
-//    size_t size()
-//    {
-//        return positions.size();
-//    }
-
-//    // 文字画像
-//    cv::Mat characterImage ( size_t n )
-//    {
-//        // 存在しない文字番号は原画像を返す
-//        if ( size() < n )
-//        {
-//            return image;
-//        }
-		
-//        return image( positions[n] );
-//    }
-
-//    // 数字認識
-//    int getDigit ( size_t n )
-//    {
-//        // 文字がないときは 0
-//        if ( 0 == size() )
-//            return 0;
-
-//        int value = recognizeDigit ( characterImage ( n ) );
-//        return value;
-//    }
-
-//};
-
-
+            int value = recognizeDigit(characterImage(n));
+            return value;
+        }
 
     }
 }
