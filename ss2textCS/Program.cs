@@ -12,24 +12,28 @@ namespace ss2textCS
     {
         static void Main(string[] args)
         {
-            using (IplImage image = new IplImage(128, 128, BitDepth.U8, 1))
+            // ss 読み込み
+            using ( CvMat ss = new CvMat ( "ss3.png" )
             {
-                image.Zero();
-                for (int x = 0; x < image.Width; x++)
-                {
-                    for (int y = 0; y < image.Height; y++)
-                    {
-                        int offset = y * image.WidthStep + x;
-                        byte value = (byte)(x + y); 
-                        Marshal.WriteByte(image.ImageData, offset, value);
+                // スコア読み出し
+                List<Score> scores;
 
-                    }
-                }
-                using (CvWindow window = new CvWindow(image))
-                {
-                    CvWindow.WaitKey();
-                }
             }
+            //            // ss読み込み
+            //cv::Mat ss = cv::imread("ss3.png");
+
+            //// スコア読み出し
+            //std::vector<Score> scores;
+            //recognize( ss, scores );
+
+            //for ( size_t n = 0; n < scores.size(); n++ )
+            //{
+            //    std::cout << scores[n].toString() << std::endl;
+            //}
+
+            //// 表示
+            //cv::waitKey();
+
         }
     }
 }
