@@ -4,12 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenCvSharp;
-using System.Runtime.InteropServices;
 
 namespace ss2textCS
 {
-    class Program
+    partial class Program
     {
+        void showrite(String s, CvMat image)
+        {
+            CvWindow.ShowImages(image);
+            image.SaveImage(s);
+        }
+
         static void Main(string[] args)
         {
             // ss 読み込み
