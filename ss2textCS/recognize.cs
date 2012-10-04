@@ -10,7 +10,7 @@ namespace ss2textCS
     partial class Program
     {
         // 数字認識
-        int recognizeDigit ( CvMat image )
+        internal static int recognizeDigit(CvMat image)
         {
             int nonzero = 0;
 
@@ -70,7 +70,7 @@ namespace ss2textCS
         }
 
         // 所属国認識
-        所属国 recognizeNationality ( CvMat image )
+        static 所属国 recognizeNationality(CvMat image)
         {
 	        // 2値画像の輝点数を基に判別する
 	        // ces: 25
@@ -93,7 +93,7 @@ namespace ss2textCS
         /** 所属国認識2
          * @param image 所属国アイコン部分カラー画像
         */
-        所属国 recognizeNationality2 ( CvMat image )
+        static 所属国 recognizeNationality2 ( CvMat image )
         {
             // 閾値130.0で2値化した画像を基にする
             CvMat bin = new CvMat( image.Rows, image.Cols, MatrixType.U8C1);
@@ -113,7 +113,7 @@ namespace ss2textCS
             return 所属国.不明;
         }
 
-        int recognizeInteger ( CvMat image )
+        static int recognizeInteger ( CvMat image )
         {
             // 文字列情報
             CharactersInfo charactersInfo = new CharactersInfo(image);
@@ -129,7 +129,7 @@ namespace ss2textCS
         }
 
         // クラス認識
-        クラス recognizeJob ( CvMat image )
+        static クラス recognizeJob ( CvMat image )
         {
             // 文字列情報
             CharactersInfo charactersInfo = new CharactersInfo( image );
@@ -174,7 +174,7 @@ namespace ss2textCS
          * @param ss fezのスクリーンショット
          * @param scores 認識したスコアデータ格納先
          */
-        void recognize ( CvMat ss, ref List<Score> scores )
+        static void recognize ( CvMat ss, ref List<Score> scores )
         {
             // 表部分切り出し
             CvMat scoreTable = extractScoreTable(ss);
@@ -200,6 +200,16 @@ namespace ss2textCS
                 // rect = new Rect ( Score.NameOffset, 0, Score.NameWidthm scoreRows[n].Rows );
                 // String name = recognizeText( scoreRows[n].GetSubArr( out submat, rect ));
                 // score.name = name;
+                // 所属国
+                rect = new CvRect (Score.NationalityOffset, 0, Score.NationalityWidth, scoreRows[n].Rows );
+                nationality = recognizeNationality(scoreRows[n].GetSubArr(out submat, rect));
+                if (所属国.不明 == nationality)
+                    nationality = recognizeNationality2(extractColorNationality(scoreTable, n));
+                score.nationality = nationality;
+                // クラス
+                rect = new CvRect(Score.JobOffset, 0, Score.JobWidth, scoreRows[n].Rows);
+                job = recognizeJob(scoreRows[n].GetSubArr(out submat, rect));
+                score.job = job;
                 // キル数
                 rect = new CvRect (Score.KillOffset, 0, Score.KillWidth, scoreRows[n].Rows );
                 integer = recognizeInteger( scoreRows[n].GetSubArr( out submat, rect ));

@@ -19,7 +19,7 @@ namespace ss2textCS
         public const int RankWidth = 20;
         public 
         // キャラクタ名
-        public String name { get; set; }
+        String name { get; set; }
         public const int NameOffset = 29;
         public const int NameWidth = 114;
         // 所属国

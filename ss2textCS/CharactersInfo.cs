@@ -117,7 +117,7 @@ namespace ss2textCS
             if (0 == size())
                 return 0;
 
-            int value = recognizeDigit(characterImage(n));
+            int value = Program.recognizeDigit(characterImage(n));
             return value;
         }
 

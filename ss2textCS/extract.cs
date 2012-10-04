@@ -17,7 +17,7 @@ namespace ss2textCS
         const int TableHeight = 352;
 
         // SSからスコア表を抽出
-        CvMat extractScoreTable ( CvMat ss )
+        static CvMat extractScoreTable(CvMat ss)
         {
             // 画像中央から一定位置の一定矩形
             CvRect rect = new CvRect( 
@@ -36,7 +36,7 @@ namespace ss2textCS
         const int ScoreTop10Rows = 10;
 
         // n番目アイコン部分を返す
-        CvMat extractColorNationality ( CvMat scoreTable, int n )
+        static CvMat extractColorNationality(CvMat scoreTable, int n)
         {
             CvRect rect;
             CvMat scoreRow;
@@ -62,7 +62,7 @@ namespace ss2textCS
         }
 
         // スコア表からキャラクタ単位に切り分ける
-        void extractScoreRows ( CvMat scoreTable, ref List<CvMat> scoreRows )
+        static void extractScoreRows(CvMat scoreTable, ref List<CvMat> scoreRows)
         {
             CvMat scoreRow;
             CvRect rect;
@@ -85,7 +85,7 @@ namespace ss2textCS
 
         // 孤立輝点除去
         // 周囲に輝点が無い場合，その輝点を消す
-        CvMat removeNoize ( CvMat image )
+        static CvMat removeNoize(CvMat image)
         {
             // 1px大きい作業用画像
             CvMat workImage = new CvMat( image.Rows+1, image.Cols+1, MatrixType.U8C1 );
@@ -113,7 +113,7 @@ namespace ss2textCS
         }
 
         // スコア表画像を2値化
-        CvMat scoreTable2Binary ( CvMat scoreTable )
+        static CvMat scoreTable2Binary(CvMat scoreTable)
         {
             CvMat bin = new CvMat( scoreTable.Rows, scoreTable.Cols, MatrixType.U8C1);
             // グレイスケール化
@@ -125,7 +125,6 @@ namespace ss2textCS
             
             return bin;
         }
-
 
     }
 

@@ -17,11 +17,13 @@ namespace ss2textCS
 
         static void Main(string[] args)
         {
+            // スコア
+            List<Score> scores;
             // ss 読み込み
             using ( CvMat ss = new CvMat ( "ss3.png" )
             {
                 // スコア読み出し
-                List<Score> scores;
+                recognize( ss, ref scores );
 
             }
             //            // ss読み込み
