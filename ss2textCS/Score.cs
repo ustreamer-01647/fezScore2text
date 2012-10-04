@@ -17,6 +17,7 @@ namespace ss2textCS
         public int rank { get; set; }
         public const int RankOffset = 0;
         public const int RankWidth = 20;
+        public 
         // キャラクタ名
         public String name { get; set; }
         public const int NameOffset = 29;

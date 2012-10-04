@@ -46,7 +46,7 @@ namespace ss2textCS
                 // ランキング部分から抽出
                 rect = new CvRect( 
                     Score.NationalityOffset, n * ( ScoreRowHeight + ScoreRowInterval ),
-                    Score.NationalityWidth, ScoreRowHeight ) );
+                    Score.NationalityWidth, ScoreRowHeight );
                 
             }
             else
@@ -115,7 +115,7 @@ namespace ss2textCS
         // スコア表画像を2値化
         CvMat scoreTable2Binary ( CvMat scoreTable )
         {
-            CvMat bin;
+            CvMat bin = new CvMat( scoreTable.Rows, scoreTable.Cols, MatrixType.U8C1);
             // グレイスケール化
             scoreTable.CvtColor( bin, ColorConversion.BgrToGray );
             // 2値化

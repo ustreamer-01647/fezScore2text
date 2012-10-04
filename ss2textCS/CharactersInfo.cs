@@ -95,13 +95,13 @@ namespace ss2textCS
         }
 
         // 文字数
-        int size()
+        public int size()
         {
             return positions.Count;
         }
 
         // 文字画像
-        CvMat characterImage(int n)
+        public CvMat characterImage(int n)
         {
             // 存在しない場合は原画像を返す
             if (size() < n)
@@ -112,7 +112,7 @@ namespace ss2textCS
         }
 
         // 数字認識
-        int getDigit(int n)
+        public int getDigit(int n)
         {
             if (0 == size())
                 return 0;
