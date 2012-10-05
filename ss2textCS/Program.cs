@@ -34,6 +34,7 @@ namespace ss2textCS
                 {
                     scores[n].dump();
                 }
+                Cv.WaitKey();
             }
 
         }

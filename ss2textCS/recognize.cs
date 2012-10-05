@@ -35,32 +35,32 @@ namespace ss2textCS
                 return 4;
 
             CvRect rect = new CvRect( 0, 0, 1, image.Rows*2/3 );
-            CvMat submat;
-            nonzero = image.GetSubArr ( out submat, rect ).CountNonZero();
+            CvMat subarr;
+            nonzero = image.GetSubArr ( out subarr, rect ).CountNonZero();
             if ( 0 == nonzero )
                 // 3 左端の上部3分の2がすべて暗点
                 return 3;
 
             rect = new CvRect ( 0, image.Rows/2, 3, 2 );
-            nonzero = image.GetSubArr ( out submat, rect ).CountNonZero();
+            nonzero = image.GetSubArr ( out subarr, rect ).CountNonZero();
             if ( 0 == nonzero )
                 // 5 左端の下半分開始すぐのwidth3 height2 がすべて暗点
                 return 5;
 
             rect = new CvRect ( image.Cols/2, image.Rows/2-1, 1, 3 );
-            nonzero = image.GetSubArr( out submat, rect ).CountNonZero();
+            nonzero = image.GetSubArr( out subarr, rect ).CountNonZero();
             if ( 0 == nonzero )
                 // 0 中央列中央3ピクセルがすべて暗点
                 return 0;
 
             rect = new CvRect ( image.Cols-1, 0, 1, image.Rows*2/5 );
-            nonzero = image.GetSubArr( out submat, rect ).CountNonZero();
+            nonzero = image.GetSubArr( out subarr, rect ).CountNonZero();
             if ( 0 == nonzero )
                 // 6 右端上部5分の2がすべて暗点
                 return 6;
 
             rect = new CvRect ( image.Cols-1, image.Rows-3, 1, 3 );
-            nonzero = image.GetSubArr( out submat, rect ).CountNonZero();
+            nonzero = image.GetSubArr( out subarr, rect ).CountNonZero();
             if ( 0 == nonzero )
                 // 右端下部3ピクセルがすべて暗点
                 return 9;
@@ -117,8 +117,6 @@ namespace ss2textCS
         {
             // 文字列情報
             CharactersInfo charactersInfo = new CharactersInfo(image);
-
-            showrite("int", image);
 
             // 数値認識
             StringBuilder sb = new StringBuilder();
