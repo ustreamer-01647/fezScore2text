@@ -9,10 +9,15 @@ namespace ss2textCS
 {
     partial class Program
     {
-        void showrite(String s, CvMat image)
+        static int showiteCounter = 0;
+
+        static void showrite(String s, CvMat image)
         {
-            CvWindow.ShowImages(image);
-            image.SaveImage(s);
+            CvWindow window = new CvWindow(showiteCounter.ToString() + s);
+            window.ShowImage(image);
+            image.SaveImage(showiteCounter.ToString() + s + ".png");
+
+            showiteCounter++;
         }
 
         static void Main(string[] args)
@@ -20,26 +25,16 @@ namespace ss2textCS
             // スコア
             List<Score> scores;
             // ss 読み込み
-            using ( CvMat ss = new CvMat ( "ss3.png" )
+            using ( CvMat ss = new CvMat ( "ss3.png" ) )
             {
                 // スコア読み出し
-                recognize( ss, ref scores );
+                recognize(ss, out scores);
 
+                for (int n = 0; n < scores.Count; n++)
+                {
+                    scores[n].dump();
+                }
             }
-            //            // ss読み込み
-            //cv::Mat ss = cv::imread("ss3.png");
-
-            //// スコア読み出し
-            //std::vector<Score> scores;
-            //recognize( ss, scores );
-
-            //for ( size_t n = 0; n < scores.size(); n++ )
-            //{
-            //    std::cout << scores[n].toString() << std::endl;
-            //}
-
-            //// 表示
-            //cv::waitKey();
 
         }
     }

@@ -118,11 +118,14 @@ namespace ss2textCS
             // 文字列情報
             CharactersInfo charactersInfo = new CharactersInfo(image);
 
+            showrite("int", image);
+
             // 数値認識
             StringBuilder sb = new StringBuilder();
             for ( int n = 0; n < charactersInfo.size(); n++ )
             {
-                sb.AppendFormat("D", charactersInfo.getDigit(n));
+                int a = charactersInfo.getDigit(n);
+                sb.Append(a.ToString());
             }
 
             return int.Parse( sb.ToString() );
@@ -138,7 +141,7 @@ namespace ss2textCS
             if ( 5 == charactersInfo.size() )
             {
                 int second = charactersInfo.characterImage(1).CountNonZero();
-                int last = charactersInfo .characterImage(4).CountNonZero();
+                int last = charactersInfo.characterImage(4).CountNonZero();
                 // 第2字と最終文字の輝点数差が3以下なら同一文字があるソーサラーとみなす
                 int diff = second - last;
                 if ( diff*diff < 3*3 )
@@ -174,8 +177,10 @@ namespace ss2textCS
          * @param ss fezのスクリーンショット
          * @param scores 認識したスコアデータ格納先
          */
-        static void recognize ( CvMat ss, ref List<Score> scores )
+        static void recognize ( CvMat ss, out List<Score> scores )
         {
+            scores = new List<Score>();
+
             // 表部分切り出し
             CvMat scoreTable = extractScoreTable(ss);
             // 2値画像

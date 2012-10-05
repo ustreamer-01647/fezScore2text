@@ -18,6 +18,8 @@ namespace ss2textCS
 
         public CharactersInfo(CvMat _image)
         {
+            positions = new List<CvRect>();
+
             // 画像コピー
             image = _image.Clone();
 
@@ -87,12 +89,14 @@ namespace ss2textCS
                         }
                         // 文字領域確定
                         positions.Add(new CvRect(left, top, right - left, bottom - top));
+                        // 探索フラグ切り替え
+                        searchingBright = true;
                     }
-                    // 探索フラグ切り替え
-                    searchingBright = true;
                 }
             }
         }
+
+
 
         // 文字数
         public int size()
