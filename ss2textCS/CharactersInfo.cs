@@ -112,7 +112,8 @@ namespace ss2textCS
             {
                 return image;
             }
-            return image.GetSubArr(out image, positions[n]);
+            CvMat subarr;
+            return image.GetSubArr(out subarr, positions[n]);
         }
 
         // 数字認識
