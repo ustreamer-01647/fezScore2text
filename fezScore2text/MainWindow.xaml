@@ -1,0 +1,35 @@
+﻿<Window x:Class="fezScore2text.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="372.654" Width="562.379">
+    <DockPanel>
+        <Menu Name="menu1" DockPanel.Dock="Top">
+            <MenuItem Header="ファイル(_F)">
+                <MenuItem Name="MenuOpen" Header="開く(_O)" Click="MenuOpen_Click"/>
+                <MenuItem Name="MenuExit" Header="終了(_X)" Click="MenuExit_Click"></MenuItem>
+            </MenuItem>
+            <MenuItem Name="MenuPreview" Header="スコア表プレビュー(_P)" Click="MenuPreview_Click" IsEnabled="False">
+            </MenuItem>
+            <!--
+            <MenuItem Header="編集(_E)">
+                <MenuItem Command="ApplicationCommands.Cut"></MenuItem>
+                <MenuItem Command="ApplicationCommands.Copy"></MenuItem>
+                <MenuItem Command="ApplicationCommands.Paste"></MenuItem>
+            </MenuItem>
+            -->
+        </Menu>
+        <DataGrid DockPanel.Dock="Top" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="ID" />
+                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="順位"/>
+                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="キャラクター名"/>
+                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="所属国"/>
+                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="キル数"/>
+                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="デッド数"/>
+                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="貢献度"/>
+                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="PC与ダメージ"/>
+                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="建築与ダメージ"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>
