@@ -27,7 +27,7 @@ namespace fezScore2text
         // fezスクリーンショットスコア表部分
         CvMat scoreTable;
         // プレビュー画像
-        CvMat previewImage;
+        CvMat previewImage = new CvMat();
 
         public MainWindow()
         {
@@ -50,8 +50,10 @@ namespace fezScore2text
                 using (ss = new CvMat(dlg.FileName))
                 {
                     scoreTable = extractScoreTable(ss);
+                    previewImage = scoreTable.Clone();
                     refreshPreview();
                     MenuClose.IsEnabled = true;
+                    MenuPreview.IsEnabled = true;
                 }
             }
 
@@ -59,8 +61,6 @@ namespace fezScore2text
 
         private void refreshPreview()
         {
-            CvWindow.DestroyAllWindows();
-            previewImage = scoreTable.Clone();
             Cv.ShowImage("プレビュー", previewImage);
         }
 
