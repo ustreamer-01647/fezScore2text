@@ -26,6 +26,8 @@ namespace fezScore2text
         CvMat ss;
         // fezスクリーンショットスコア表部分
         CvMat scoreTable;
+        // プレビュー画像
+        CvMat previewImage;
 
         public MainWindow()
         {
@@ -48,20 +50,35 @@ namespace fezScore2text
                 using (ss = new CvMat(dlg.FileName))
                 {
                     scoreTable = extractScoreTable(ss);
-                    // プレビュー更新
-                    previewRefresh(scoreTable);
+                    refreshPreview();
+                    MenuClose.IsEnabled = true;
                 }
             }
 
         }
 
-        private void previewRefresh(CvMat scoreTable)
+        private void refreshPreview()
         {
-
+            CvWindow.DestroyAllWindows();
+            previewImage = scoreTable.Clone();
+            Cv.ShowImage("プレビュー", previewImage);
         }
 
         private void MenuPreview_Click(object sender, RoutedEventArgs e)
         {
+            refreshPreview();
+        }
+
+        private void MenuClose_Click(object sender, RoutedEventArgs e)
+        {
+            // 解放
+            CvWindow.DestroyAllWindows();
+            scoreTable.Dispose();
+            ss.Dispose();
+
+            // UI設定
+            MenuClose.IsEnabled = false;
+            MenuPreview.IsEnabled = false;
         }
 
     }

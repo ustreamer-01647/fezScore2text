@@ -5,10 +5,13 @@
     <DockPanel>
         <Menu Name="menu1" DockPanel.Dock="Top">
             <MenuItem Header="ファイル(_F)">
-                <MenuItem Name="MenuOpen" Header="開く(_O)" Click="MenuOpen_Click"/>
-                <MenuItem Name="MenuExit" Header="終了(_X)" Click="MenuExit_Click"></MenuItem>
+                <MenuItem Name="MenuOpen" Header="開く(_O)" Click="MenuOpen_Click" />
+                <MenuItem Name="MenuClose" Header="閉じる(_C)" IsEnabled="False" Click="MenuClose_Click" />
+                <Separator />
+                <MenuItem Name="MenuExit" Header="終了(_X)" Click="MenuExit_Click" />
             </MenuItem>
-            <MenuItem Name="MenuPreview" Header="スコア表プレビュー(_P)" Click="MenuPreview_Click" IsEnabled="False">
+            <MenuItem Name="MenuView" Header="表示(_V)">
+                <MenuItem Name="MenuPreview" Header="スコア表プレビュー(_P)" Click="MenuPreview_Click" />
             </MenuItem>
             <!--
             <MenuItem Header="編集(_E)">
@@ -18,7 +21,7 @@
             </MenuItem>
             -->
         </Menu>
-        <DataGrid DockPanel.Dock="Top" >
+        <DataGrid Name="ScoreDataGrid" DockPanel.Dock="Top" >
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="ID" />
                 <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="順位"/>
